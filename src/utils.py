@@ -12,6 +12,7 @@ from tqdm import tqdm
 from collections import defaultdict
 from scipy.ndimage import gaussian_filter1d
 
+import sascorer
 from rdkit import Chem
 from rdkit.Chem.Descriptors import CalcMolDescriptors
 from rdkit.Chem import QED, Descriptors, AllChem, rdMolDescriptors, Draw
@@ -212,7 +213,7 @@ def estimate_solubility(smiles: str) -> tuple:
     
     ##linear model to calculate solubility
     logS = -0.01 * mol_weight + 0.5 * num_h_donors + 0.5 * num_h_acceptors - logP
-    return np.round(logS/100, 3)
+    return np.round(logS, 3)
 
 def calculate_qed(smiles: list) -> float:
     """
@@ -225,22 +226,18 @@ def calculate_qed(smiles: list) -> float:
     qed_score = QED.qed(mol)
     return np.round(qed_score, 3)
 
-def estimate_synthesizeability(smiles):
-    '''
-    Calculates synthesizeability using synthetic RDKits synthetic accessibility score
-    '''
-    mol = get_mol(smiles)
+def calculate_sa_score(smiles: str) -> float:
+    """
+    Calculates the synthetic accessibility (SA) score for a given SMILES string.
+    Lower scores indicate easier synthesis.
+    """
+    mol = Chem.MolFromSmiles(smiles)
     if mol is None:
-        return None
+        raise ValueError("Invalid SMILES string")
     
-    ##get discriptors to calculate a rough estimation of mol synthesizeability
-    mol_weight = Descriptors.MolWt(mol)
-    n_rings = Descriptors.RingCount(mol)
-    n_heteroatoms = Descriptors.NumHeteroatoms(mol)
-    
-    ##less heteroatoms, rings, and smaller molecules are generally easier to synthesize
-    synth_score = 0.5 * (mol_weight / 100) + 2 * n_rings + n_heteroatoms
-    return np.round(synth_score, 3)
+    ##compute SA score using the sascorer script
+    sa_score = sascorer.calculateScore(mol) / (rdMolDescriptors.CalcNumRings(mol) + 1.0)
+    return np.round(sa_score, 3)
 
 def plot_single_mol(smiles: str, size=(400, 400)) -> object:
     '''
