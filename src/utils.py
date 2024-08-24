@@ -12,7 +12,7 @@ from tqdm import tqdm
 from collections import defaultdict
 from scipy.ndimage import gaussian_filter1d
 
-import sascorer
+from external_utils import sascorer
 from rdkit import Chem
 from rdkit.Chem.Descriptors import CalcMolDescriptors
 from rdkit.Chem import QED, Descriptors, AllChem, rdMolDescriptors, Draw
