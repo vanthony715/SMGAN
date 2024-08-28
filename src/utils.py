@@ -41,6 +41,13 @@ def make_dir(path: str) -> None:
     os.makedirs(path)
     print('Created Folder at: ', path)
 
+def show_model_details(model: object) -> None:
+    print("Model Structure:\n")
+    for name, module in model.named_children():
+        print(f"{name}: {module.__class__.__name__}")
+        for param_name, param in module.named_parameters(recurse=False):
+            print(f"  - {param_name}: {param.size()}")
+
 def count_parameters(model: object) -> int:
     '''
     Counts total network parameters

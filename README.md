@@ -6,6 +6,8 @@ Quick start:
 
 - start jupyter lab and open train.ipynb to train, and generate novel molecules.
 
+Note: If you don't want to erase this work, then simply duplicate script or run train_tester.ipynb as specified in the ./src section of this document.
+
 
 Location: ./
 ===========================================================================================================================================================================================
@@ -34,6 +36,12 @@ Location: ./src:
 quality metrics are calculated. Molecules are produced for qualitative inspection at the very end of this notebook.
 
 - generation_tuner.ipynb - This notebook takes the model trained with the best found hyperparameters, and performs a search for the best max_len to use during inference. It also calculates the viability and quality metrics of the best inference parameters. 
+
+- visualize_network - This network counts the network parameters and shows specific info using torchinfo. This is very usefule, since the first network had ~80M trainable parameters for the generator by itself. This number has been reduced and is now a tenth of the size.
+
+- visualize_molecules.ipynb - This is more of a molecule exploration. For this dataset, what does a simple molecule look like? What about moderately difficult or most difficult?
+
+- train_tester.ipynb - Is where new models are tested, outside of the original train notebook. Use this if you don't know if what you're going to do will work. Results are saved in the same folders as the original notebooks paths.
 
 - external_utils - This folder includes RDKit files that were manually downloaded from https://github.com/rdkit/rdkit/blob/master/Contrib/SA_Score/sascorer.py This code is used to calculate synthesizeability
 
